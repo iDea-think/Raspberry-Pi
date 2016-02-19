@@ -1,0 +1,55 @@
+#include <stido.h>
+#include <wiringPi.h>
+
+#define LED 7
+#define TRIG 5
+#define ECHO 4
+
+int main(void)
+{
+  int distance=0;
+  int pulse=0;
+  int standard;
+  
+  if(wiringPiSetup() == -1)
+  return 1;
+  
+  pinMode(TRIG,OUTPUT);
+  pinMode(ECHO,INPUT);
+  pinMode(LED,OUTPUT);
+  
+  print("enter standard number: ");
+  scanf("%d", &standard);
+  
+  for(;;)
+  {
+  digitalWrite(TRIG,LOW);
+  unsleep(2);
+  digitalWrite(TRIG,HIGH);
+  unsleep(20);
+  
+  digitalWrite(TRIG,LOW);
+  
+  while(digitalRead(ECHO) == LOW);
+  long startTime == micros();
+  while(digitalRead(ECHO) == HIGH);
+  long travelTime = micros() - startTime;
+  
+  int distance = travelTime / 58;
+
+    if(distance > standard)
+    {
+    digitalWrite(LED, 1);
+    delay(100);
+    }
+    
+    if(distance <= standard)
+    {
+    digitalWrite(LED, 0);
+    delay(100);
+    }
+
+  printf("Distance:%dcm\n", distance);
+  delay(100);
+  }
+}
